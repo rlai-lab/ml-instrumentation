@@ -1,0 +1,56 @@
+name: tag
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && !startsWith(github.event.head_commit.message, 'bump:')
+    steps:
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.PUBLISHER_APP_ID }}
+          private-key: ${{ secrets.PUBLISHER_PRIVATE_KEY }}
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ steps.generate-token.outputs.token }}
+
+      - id: cz
+        name: Create bump commit, tag, and changelog
+        uses: commitizen-tools/commitizen-action@master
+        with:
+          github_token: ${{ steps.generate-token.outputs.token }}
+          actor: x-access-token
+
+      # setup the repository
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - run: |
+          uv venv
+          uv sync
+          source .venv/bin/activate
+
+      - run: echo "$PWD/.venv/bin" >> $GITHUB_PATH
+
+      - name: Build
+        run: uv build
+
+      - name: Publish
+        run: uv publish
