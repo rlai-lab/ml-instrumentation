@@ -1,4 +1,4 @@
-from typing import Callable
+from collections.abc import Callable
 from ml_instrumentation.Sampler import Sampler
 
 class Pipe(Sampler):

@@ -1,6 +1,7 @@
+from collections.abc import Callable, Sequence
 import pytest
 from collections import defaultdict
-from typing import Any, Callable, Dict, List, NamedTuple, Sequence
+from typing import Any, NamedTuple
 from ml_instrumentation.Collector import Collector
 from ml_instrumentation.Sampler import Identity, Ignore
 from ml_instrumentation.Writer import SqlPoint
@@ -42,7 +43,7 @@ class SimMetric(NamedTuple):
 
 
 def simulate_run(collector: Collector, start: int, end: int, metrics: Sequence[SimMetric]):
-    expected: Dict[str, List[SqlPoint]] = defaultdict(list)
+    expected: dict[str, list[SqlPoint]] = defaultdict(list)
 
     exp_id = collector.get_current_experiment_id()
 
