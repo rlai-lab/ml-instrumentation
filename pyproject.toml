@@ -17,7 +17,7 @@ typeCheckingMode = 'standard'
 useLibraryCodeForTypes = true
 
 [project]
-name = "ml-instrumentation"
+name = "ml-instrument"
 version = "0.0.0"
 description = ""
 authors = [
