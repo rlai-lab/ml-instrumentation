@@ -1,5 +1,5 @@
+from collections.abc import Callable
 import numpy as np
-from typing import Callable
 
 class Sampler:
     def next(self, v: float) -> float | None: ...

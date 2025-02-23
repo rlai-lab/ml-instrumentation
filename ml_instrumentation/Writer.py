@@ -3,7 +3,7 @@ import time
 import sqlite3
 import logging
 from collections import defaultdict
-from typing import Any, Dict, List, NamedTuple, Set
+from typing import Any, NamedTuple
 from concurrent.futures import ThreadPoolExecutor, Future
 
 import filelock
@@ -51,8 +51,8 @@ class Writer:
         # -- state --
         # -----------
         self._i = 0
-        self._buffer: Dict[str, Dict[int, Point]] = defaultdict(dict)
-        self._built: Set[str] = set()
+        self._buffer: dict[str, dict[int, Point]] = defaultdict(dict)
+        self._built: set[str] = set()
 
         self._avg_write_time = -1
         self._last_write_time = -1
@@ -95,7 +95,7 @@ class Writer:
         assert self._write_future is not None
         self._write_future.result()
 
-    def read_metric(self, metric: str, exp_id: int | str | None = None) -> List[SqlPoint]:
+    def read_metric(self, metric: str, exp_id: int | str | None = None) -> list[SqlPoint]:
         self.sync_now()
 
         cond = ''
@@ -156,7 +156,7 @@ class Writer:
     # -------------------
     # -- Backend logic --
     # -------------------
-    def _sync_async(self, d: Dict[str, Dict[int, Point]]):
+    def _sync_async(self, d: dict[str, dict[int, Point]]):
         sql_d = {}
         for m, sub in d.items():
             sql_d[m] = [
@@ -197,7 +197,7 @@ class Writer:
         cur.execute(f'CREATE TABLE "{name}"(frame INTEGER, id, measurement)')
         self._built.add(name)
 
-    def _write_many(self, cur: sqlite3.Cursor, m: str, d: List[SqlPoint]):
+    def _write_many(self, cur: sqlite3.Cursor, m: str, d: list[SqlPoint]):
         cur.executemany(f'INSERT INTO "{m}" (frame, id, measurement) VALUES (?,?,?)', d)
 
 

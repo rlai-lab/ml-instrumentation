@@ -1,4 +1,5 @@
-from typing import Any, Callable, Dict
+from collections.abc import Callable
+from typing import Any
 
 import jax.experimental
 from ml_instrumentation.Sampler import Sampler, Ignore, Identity, identity
@@ -14,14 +15,14 @@ class Collector:
     def __init__(
         self,
         tmp_file: str = ':memory:',
-        config: Dict[str, Sampler | Ignore] | None = None,
+        config: dict[str, Sampler | Ignore] | None = None,
         default: Identity | Ignore = identity,
         experiment_id: int | str | None = None,
     ):
         self._c = config or {}
 
         self._ignore = set(k for k, sampler in self._c.items() if isinstance(sampler, Ignore))
-        self._sampler: Dict[str, Sampler] = {
+        self._sampler: dict[str, Sampler] = {
             k: sampler for k, sampler in self._c.items() if not isinstance(sampler, Ignore)
         }
 
