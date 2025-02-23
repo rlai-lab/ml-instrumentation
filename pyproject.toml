@@ -16,6 +16,9 @@ venv = '.venv'
 typeCheckingMode = 'standard'
 useLibraryCodeForTypes = true
 
+[tool.hatch.build.targets.wheel]
+packages = ["ml_instrumentation"]
+
 [project]
 name = "ml-instrument"
 version = "0.1.0"
@@ -50,3 +53,7 @@ dev = [
     "pytest-cov>=6.0.0",
     "ruff>=0.9.5",
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
