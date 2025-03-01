@@ -18,6 +18,8 @@ class Collector:
         config: dict[str, Sampler | Ignore] | None = None,
         default: Identity | Ignore = identity,
         experiment_id: int | str | None = None,
+        low_watermark: int = 1024,
+        high_watermark: int = 2048,
     ):
         self._c = config or {}
 
@@ -29,8 +31,8 @@ class Collector:
         self._tmp_file = tmp_file
         self._writer = Writer(
             db_path=self._tmp_file,
-            low_watermark=1,
-            high_watermark=2048,
+            low_watermark=low_watermark,
+            high_watermark=high_watermark,
         )
 
         self._exp_id = experiment_id
