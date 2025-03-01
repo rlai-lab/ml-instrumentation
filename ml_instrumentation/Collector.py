@@ -29,7 +29,7 @@ class Collector:
         self._tmp_file = tmp_file
         self._writer = Writer(
             db_path=self._tmp_file,
-            low_watermark=1024,
+            low_watermark=1,
             high_watermark=2048,
         )
 
@@ -60,6 +60,10 @@ class Collector:
 
     def next_frame(self):
         self._frame += 1
+
+    def set_frame(self, frame: int):
+        assert frame >= self._frame
+        self._frame = frame
 
     def reset(self):
         self.next_frame()
