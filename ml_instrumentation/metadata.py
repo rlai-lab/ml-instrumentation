@@ -23,7 +23,6 @@ def attach_metadata(db_path: str | Path, id: int | str, metadata: dict[str, Any]
 
         header = ', '.join(map(sqlu.quote, cols))
         query = f'INSERT INTO _metadata_ ({header}) VALUES ({inserter})'
-        print(query)
         cur.execute(query, list(metadata.values()))
         con.commit()
         con.close()
