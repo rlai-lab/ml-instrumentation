@@ -1,3 +1,11 @@
+## 0.3.0 (2025-03-02)
+
+### Feat
+
+- add data reader utilities
+- add ability to attach metadata to a run id
+- expose watermarks as options on Collector class
+
 ## 0.2.0 (2025-03-01)
 
 ### Feat
