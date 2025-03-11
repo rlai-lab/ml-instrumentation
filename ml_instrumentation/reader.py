@@ -18,13 +18,15 @@ def read_to_df(db_path: str | Path, metric: str, ids: Iterable[int] | None = Non
 
     query = f'SELECT * FROM {metric} {constraints}'
     df = cx.read_sql(f'sqlite://{db_path}', query, partition_on='id', partition_num=4, return_type='polars')
+    df = df.lazy()
     df = df.rename({'measurement': metric})
     return df
 
 
 def read_metrics(db_path: str | Path, metrics: Iterable[str], ids: Iterable[int] | None = None):
     dfs = [read_to_df(db_path, metric, ids) for metric in metrics]
-    df = reduce(lambda df1, df2: df1.join(df2, how='full', on=['id', 'frame']), dfs)
+    df = reduce(lambda df1, df2: df1.join(df2, how='full', on=['id', 'frame'], coalesce=True), dfs)
+    df = df.sort('frame')
     return df
 
 
@@ -39,10 +41,11 @@ def load_all_results(db_path: str | Path, metrics: Iterable[str] | None = None, 
     df = read_metrics(db_path, metrics, ids)
 
     if '_metadata_' not in tables:
-        return df
+        return df.collect()
 
     meta = cx.read_sql(f'sqlite://{db_path}', 'SELECT * FROM _metadata_', return_type='polars')
-    return df.join(meta, how='left', on=['id'])
+    meta = meta.lazy()
+    return df.join(meta, how='left', on=['id']).collect()
 
 
 def get_run_ids(db_path: str | Path, params: dict[str, Any]):
