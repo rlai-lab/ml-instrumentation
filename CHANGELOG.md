@@ -1,3 +1,9 @@
+## 0.3.1 (2025-03-11)
+
+### Fix
+
+- merge id and frame keys when joining dfs
+
 ## 0.3.0 (2025-03-02)
 
 ### Feat
