@@ -27,7 +27,7 @@ authors = [
     {name = "Andy Patterson", email = "andnpatterson@gmail.com"},
 ]
 dependencies = [
-    "numpy>=1.26,<=2.2.3",
+    "numpy>=1.26,<=2.2.4",
     "filelock~=3.13",
     "polars>=1.23.0",
     "connectorx>=0.4.2",
