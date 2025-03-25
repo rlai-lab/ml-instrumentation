@@ -4,6 +4,7 @@ from typing import Any
 import jax.experimental
 from ml_instrumentation.Sampler import Sampler, Ignore, Identity, identity
 from ml_instrumentation.Writer import Writer, Point
+from ml_instrumentation.backends.sqlite import Sqlite
 
 try:
     import jax
@@ -30,7 +31,7 @@ class Collector:
 
         self._tmp_file = tmp_file
         self._writer = Writer(
-            db_path=self._tmp_file,
+            backend=Sqlite(self._tmp_file),
             low_watermark=low_watermark,
             high_watermark=high_watermark,
         )
@@ -177,11 +178,10 @@ class Collector:
             self.__dict__[k] = v
 
         self._writer = Writer(
-            db_path=self._tmp_file,
+            backend=Sqlite(self._tmp_file),
             low_watermark=1024,
             high_watermark=2048,
         )
 
         if state['data'] is not None:
-            self._writer._con.executescript(state['data'])
-            self._writer._init_db()
+            self._writer.load(state['data'])

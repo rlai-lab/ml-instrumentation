@@ -4,4 +4,5 @@
 *.pyc
 test.db
 test.py
+**/*.egg-info
 uv.lock

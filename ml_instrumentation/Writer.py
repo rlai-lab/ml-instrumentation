@@ -1,50 +1,31 @@
-import os
 import time
-import sqlite3
 import logging
 from collections import defaultdict
-from typing import Any, NamedTuple
+from typing import Any
 from concurrent.futures import ThreadPoolExecutor, Future
 
-import filelock
-
-import ml_instrumentation._utils.sqlite as sqlu
+from ml_instrumentation.backends.base import BaseBackend, Point, SqlPoint
 
 logger = logging.getLogger('ml-instrumentation')
-
-class Point(NamedTuple):
-    exp_id: int | str
-    metric: str
-    frame: int
-    data: Any
-
-class SqlPoint(NamedTuple):
-    frame: int
-    id: int | str
-    measurement: Any
 
 class Writer:
     def __init__(
         self,
-        db_path: str,
+        backend: BaseBackend,
         low_watermark: int = 64,
         high_watermark: int = 256,
     ):
         # ------------
         # -- config --
         # ------------
-        self._db_path = db_path
-
         self._lw = low_watermark
         self._hw = high_watermark
 
         # ---------------
         # -- externals --
         # ---------------
+        self._backend = backend
         self._exec = ThreadPoolExecutor(max_workers=1)
-        self._con = sqlite3.connect(self._db_path, check_same_thread=False)
-        self._con.row_factory = row_factory
-
         self._write_future: Future | None = None
 
         # -----------
@@ -52,7 +33,6 @@ class Writer:
         # -----------
         self._i = 0
         self._buffer: dict[str, dict[int, Point]] = defaultdict(dict)
-        self._built: set[str] = set()
 
         self._avg_write_time = -1
         self._last_write_time = -1
@@ -60,7 +40,7 @@ class Writer:
         # -------------------------
         # -- load existing state --
         # -------------------------
-        self._init_db()
+        backend.init_db()
 
     # ------------
     # -- IO API --
@@ -97,81 +77,37 @@ class Writer:
 
     def read_metric(self, metric: str, exp_id: int | str | None = None) -> list[SqlPoint]:
         self.sync_now()
-
-        cond = ''
-        if exp_id is not None:
-            cond = f'WHERE id={maybe_quote(exp_id)}'
-
-        cur = self._con.cursor()
-        try:
-            cur = cur.execute(f'SELECT * FROM "{metric}" {cond}')
-            res = cur.fetchall()
-        except sqlite3.OperationalError:
-            logger.warning(f'Specified metric/exp_id does not exist: <{metric}, {exp_id}>')
-            res = []
-
-        return res
+        return self._backend.read_metric(metric, exp_id)
 
     def dump(self) -> str:
-        self._con.row_factory = None
         self.sync_now()
-        return ''.join(self._con.iterdump())
+        return self._backend.dump()
+
+    def load(self, data: Any):
+        self._backend.load(data)
 
     def close(self):
         self.sync_now()
-        self._con.close()
+        self._backend.close()
 
     # -----------------
     # -- Utility API --
     # -----------------
     def metrics(self):
         buffered_keys = set(self._buffer.keys())
-        return buffered_keys | self._built
+        return buffered_keys | self._backend.get_tables()
 
     def merge(self, other: str):
         self.sync_now()
+        self._backend.merge(other)
 
-        with filelock.FileLock(f'{other}.lock'):
-            other_con = sqlite3.connect(other)
-
-            cur = self._con.cursor()
-            other_cur = other_con.cursor()
-            tables = sqlu.get_tables(cur)
-            other_tables = sqlu.get_tables(other_cur)
-
-            to_build = tables - other_tables
-            for table in to_build:
-                other_cur.execute(f'CREATE TABLE "{table}"(frame, id, measurement)')
-
-            other_con.close()
-
-            cur.execute(f'ATTACH DATABASE "{other}" AS other_db')
-            for table in tables:
-                cur.execute(f'INSERT INTO other_db.{table} SELECT * FROM {table}')
-
-            self._con.commit()
-            cur.execute('DETACH DATABASE other_db')
-            cur.close()
 
     # -------------------
     # -- Backend logic --
     # -------------------
     def _sync_async(self, d: dict[str, dict[int, Point]]):
-        sql_d = {}
-        for m, sub in d.items():
-            sql_d[m] = [
-                SqlPoint(p.frame, p.exp_id, p.data) for p in sub.values()
-            ]
-
-        cur = self._con.cursor()
         start = time.perf_counter()
-
-        for m in sql_d:
-            self._setup_table(cur, m)
-            self._write_many(cur, m, sql_d[m])
-
-        self._con.commit()
-        cur.close()
+        self._backend.write_many(d)
         elapsed = time.perf_counter() - start
 
         self._last_write_time = elapsed
@@ -179,33 +115,3 @@ class Writer:
             self._avg_write_time = elapsed
         else:
             self._avg_write_time = 0.9 * self._avg_write_time + 0.1 * elapsed
-
-    def _init_db(self):
-        if not os.path.exists(self._db_path) and self._db_path != ':memory:':
-            return
-
-        cur = self._con.cursor()
-        self._built |= sqlu.get_tables(cur)
-
-    # ---------------------
-    # -- utility methods --
-    # ---------------------
-    def _setup_table(self, cur: sqlite3.Cursor, name: str):
-        if name in self._built:
-            return
-
-        cur.execute(f'CREATE TABLE "{name}"(frame INTEGER, id, measurement)')
-        self._built.add(name)
-
-    def _write_many(self, cur: sqlite3.Cursor, m: str, d: list[SqlPoint]):
-        cur.executemany(f'INSERT INTO "{m}" (frame, id, measurement) VALUES (?,?,?)', d)
-
-
-def row_factory(cur, d):
-    return SqlPoint(*d)
-
-def maybe_quote(x: int | str):
-    if isinstance(x, str):
-        return f'"{x}"'
-
-    return x

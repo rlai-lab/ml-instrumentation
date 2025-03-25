@@ -1,8 +1,9 @@
 from ml_instrumentation.Writer import Writer, Point
+from ml_instrumentation.backends.sqlite import Sqlite
 
 def test_write1():
     writer = Writer(
-        db_path=':memory:',
+        backend=Sqlite(':memory:'),
         low_watermark=2,
         high_watermark=4,
     )
@@ -39,7 +40,7 @@ def test_write1():
 
 def test_write2():
     writer = Writer(
-        db_path=':memory:',
+        backend=Sqlite(':memory:'),
         low_watermark=256,
         high_watermark=512,
     )
