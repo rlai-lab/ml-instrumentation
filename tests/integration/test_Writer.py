@@ -3,6 +3,8 @@ import sqlite3
 from ml_instrumentation.Writer import Point, SqlPoint, Writer
 from multiprocessing.pool import Pool
 
+from ml_instrumentation.backends.sqlite import Sqlite
+
 def test_write1(writer):
     d = Point(
         metric='measurement-1',
@@ -58,11 +60,11 @@ def test_write2(writer):
 
 def test_merge1(tmp_path):
     w1 = Writer(
-        db_path=str(tmp_path / 'w1.db'),
+        backend=Sqlite(tmp_path / 'w1.db'),
     )
 
     w2 = Writer(
-        db_path=':memory:',
+        backend=Sqlite(':memory:'),
     )
 
     for i in range(10):
@@ -117,7 +119,9 @@ def test_merge_parallel1(tmp_path):
 
 
 def _test_merge_parallel1(i: int, tmp_path):
-    writer = Writer(db_path=str(tmp_path / f'w{i}.db'))
+    writer = Writer(
+        backend=Sqlite(tmp_path / f'w{i}.db'),
+    )
 
     for j in range(100):
         writer.write(Point(exp_id=i, metric='a', frame=j, data=2*j + i))

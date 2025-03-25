@@ -1,10 +1,11 @@
 import pytest
 from ml_instrumentation.Writer import Writer
+from ml_instrumentation.backends.sqlite import Sqlite
 
 @pytest.fixture
 def writer():
     writer = Writer(
-        db_path=':memory:',
+        backend=Sqlite(':memory:'),
         low_watermark=2,
         high_watermark=4,
     )
