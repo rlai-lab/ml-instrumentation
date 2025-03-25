@@ -1,3 +1,9 @@
+## 0.3.2 (2025-03-25)
+
+### Refactor
+
+- generalize db backend to allow using alternative buffered writers
+
 ## 0.3.1 (2025-03-11)
 
 ### Fix
