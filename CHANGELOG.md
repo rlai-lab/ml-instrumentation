@@ -1,3 +1,14 @@
+## 0.4.0 (2025-03-26)
+
+### Feat
+
+- add tsdb backend for logging metrics to central db
+
+### Fix
+
+- ignore backend during serialization
+- allow specifying backend to collector
+
 ## 0.3.2 (2025-03-25)
 
 ### Refactor
