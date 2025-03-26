@@ -33,7 +33,6 @@ class Collector:
 
         self._backend = backend or Sqlite(tmp_file)
 
-        self._tmp_file = tmp_file
         self._writer = Writer(
             backend=self._backend,
             low_watermark=low_watermark,
@@ -166,7 +165,7 @@ class Collector:
         self._writer.sync_now()
 
         data = None
-        if self._tmp_file.startswith(':memory:'):
+        if isinstance(self._backend, Sqlite) and self._backend.is_in_memory():
             data = self._writer.dump()
 
         ignore_keys = ['_writer']
@@ -182,9 +181,9 @@ class Collector:
             self.__dict__[k] = v
 
         self._writer = Writer(
-            backend=Sqlite(self._tmp_file),
-            low_watermark=1024,
-            high_watermark=2048,
+            backend=self._backend,
+            low_watermark=1_000,
+            high_watermark=100_000,
         )
 
         if state['data'] is not None:

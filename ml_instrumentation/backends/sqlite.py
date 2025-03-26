@@ -22,7 +22,7 @@ class Sqlite(BaseBackend):
     # -- Setup --
     # -----------
     def init_db(self):
-        if not os.path.exists(self._path) and self._path != ':memory:':
+        if not os.path.exists(self._path) and str(self._path) != ':memory:':
             return
 
         cur = self._con.cursor()
@@ -35,6 +35,10 @@ class Sqlite(BaseBackend):
 
         cur.execute(f'CREATE TABLE "{name}"(frame INTEGER ASC, id, measurement)')
         self._built.add(name)
+
+    def is_in_memory(self):
+        path = str(self._path)
+        return path.startswith(':memory:')
 
     # -------------
     # -- Reading --
@@ -111,10 +115,23 @@ class Sqlite(BaseBackend):
 
     def load(self, data: Any):
         self._con.executescript(data)
+        self._con.commit()
         self.init_db()
 
     def close(self):
         self._con.close()
+
+
+    def __getstate__(self) -> object:
+        return {
+            'path': str(self._path),
+        }
+
+    def __setstate__(self, state: dict[str, Any]):
+        self._path = Path(state['path'])
+        self._con = sqlite3.connect(self._path, check_same_thread=False)
+        self._con.row_factory = row_factory
+        self._built = set[str]()
 
 
 def row_factory(cur, d):
