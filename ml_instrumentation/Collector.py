@@ -2,6 +2,7 @@ from collections.abc import Callable
 from typing import Any
 
 import jax.experimental
+from ml_instrumentation.backends.base import BaseBackend
 from ml_instrumentation.Sampler import Sampler, Ignore, Identity, identity
 from ml_instrumentation.Writer import Writer, Point
 from ml_instrumentation.backends.sqlite import Sqlite
@@ -16,11 +17,12 @@ class Collector:
     def __init__(
         self,
         tmp_file: str = ':memory:',
+        backend: BaseBackend | None = None,
         config: dict[str, Sampler | Ignore] | None = None,
         default: Identity | Ignore = identity,
         experiment_id: int | str | None = None,
-        low_watermark: int = 1024,
-        high_watermark: int = 2048,
+        low_watermark: int = 1_000,
+        high_watermark: int = 100_000,
     ):
         self._c = config or {}
 
@@ -29,9 +31,11 @@ class Collector:
             k: sampler for k, sampler in self._c.items() if not isinstance(sampler, Ignore)
         }
 
+        self._backend = backend or Sqlite(tmp_file)
+
         self._tmp_file = tmp_file
         self._writer = Writer(
-            backend=Sqlite(self._tmp_file),
+            backend=self._backend,
             low_watermark=low_watermark,
             high_watermark=high_watermark,
         )
