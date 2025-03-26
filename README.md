@@ -1,6 +1,6 @@
 # ml-instrumentation
 
-[Benchmarks](https://andnp.github.io/ml-instrumentation/dev/bench/)
+[Benchmarks](https://rlai-lab.github.io/ml-instrumentation/dev/bench/)
 
 [![Contributions](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](./CONTRIBUTING.md)
 
