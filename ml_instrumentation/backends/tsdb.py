@@ -11,6 +11,7 @@ class TSDB(BaseBackend):
     def __init__(self, conninfo: str):
         import psycopg
 
+        self._conninfo = conninfo
         self._con = psycopg.connect(conninfo)
         self._con.row_factory = row_factory
 
@@ -97,6 +98,18 @@ class TSDB(BaseBackend):
 
     def close(self):
         self._con.close()
+
+    def __getstate__(self) -> object:
+        self.close()
+        return {
+            'conninfo': self._conninfo,
+        }
+
+    def __setstate__(self, state: dict[str, Any]):
+        import psycopg
+        self._conninfo = state['conninfo']
+        self._con = psycopg.connect(self._conninfo)
+        self._con.row_factory = row_factory
 
 
 def row_factory(cur):
