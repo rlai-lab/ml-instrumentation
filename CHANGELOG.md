@@ -1,3 +1,10 @@
+## 0.4.2 (2025-04-08)
+
+### Fix
+
+- remove jax from required imports
+- move sqlalchemy to required dependencies
+
 ## 0.4.1 (2025-04-08)
 
 ### Fix
