@@ -57,7 +57,9 @@ dev = [
     "ruff>=0.9.5",
 ]
 tsdb = [
-    "psycopg>=3.2.6",
+    "psycopg2-binary>=2.9.10",
+    "sqlalchemy>=2.0.40",
+    "sqlalchemy-utils>=0.41.2",
 ]
 
 [build-system]
