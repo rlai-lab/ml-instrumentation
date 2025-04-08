@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1742962790991,
+  "lastUpdate": 1744085506962,
   "repoUrl": "https://github.com/rlai-lab/ml-instrumentation",
   "entries": {
     "Python Benchmark with pytest-benchmark": [
@@ -1352,6 +1352,58 @@ window.BENCHMARK_DATA = {
             "unit": "iter/sec",
             "range": "stddev: 0.0013251166239007838",
             "extra": "mean: 2.2487904656314996 msec\nrounds: 451"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "andnpatterson@gmail.com",
+            "name": "Andy Patterson",
+            "username": "andnp"
+          },
+          "committer": {
+            "email": "andnpatterson@gmail.com",
+            "name": "Andy Patterson",
+            "username": "andnp"
+          },
+          "distinct": true,
+          "id": "d8bd007ed68ec9bc997fb880caf9852a8572d6d7",
+          "message": "fix: use sqlalchemy to build tsdb databases",
+          "timestamp": "2025-04-07T22:11:23-06:00",
+          "tree_id": "16ee81d039c5ad8c9c36e992f50d9a770fd51c41",
+          "url": "https://github.com/rlai-lab/ml-instrumentation/commit/d8bd007ed68ec9bc997fb880caf9852a8572d6d7"
+        },
+        "date": 1744085506679,
+        "tool": "pytest",
+        "benches": [
+          {
+            "name": "tests/performance/test_Collector.py::test_benchmark_write_path1[basic_collector]",
+            "value": 172.34745897806337,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0019275746373602937",
+            "extra": "mean: 5.802232338843368 msec\nrounds: 121"
+          },
+          {
+            "name": "tests/performance/test_Collector.py::test_benchmark_write_path1[disk_collector]",
+            "value": 125.70834185767555,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0002883070167107794",
+            "extra": "mean: 7.954921568627323 msec\nrounds: 51"
+          },
+          {
+            "name": "tests/performance/test_Collector.py::test_benchmark_read1[basic_collector]",
+            "value": 441.7066970487778,
+            "unit": "iter/sec",
+            "range": "stddev: 0.001745185537405309",
+            "extra": "mean: 2.263945751063787 msec\nrounds: 470"
+          },
+          {
+            "name": "tests/performance/test_Collector.py::test_benchmark_read1[disk_collector]",
+            "value": 449.59170581215506,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0014586221260141784",
+            "extra": "mean: 2.2242403208786334 msec\nrounds: 455"
           }
         ]
       }
