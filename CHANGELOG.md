@@ -1,3 +1,9 @@
+## 0.4.1 (2025-04-08)
+
+### Fix
+
+- use sqlalchemy to build tsdb databases
+
 ## 0.4.0 (2025-03-26)
 
 ### Feat
