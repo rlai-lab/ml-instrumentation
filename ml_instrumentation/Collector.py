@@ -1,7 +1,6 @@
 from collections.abc import Callable
 from typing import Any
 
-import jax.experimental
 from ml_instrumentation.backends.base import BaseBackend
 from ml_instrumentation.Sampler import Sampler, Ignore, Identity, identity
 from ml_instrumentation.Writer import Writer, Point
