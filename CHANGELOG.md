@@ -1,3 +1,9 @@
+## 0.4.3 (2025-04-09)
+
+### Fix
+
+- avoid hardcoded 'results' table name
+
 ## 0.4.2 (2025-04-08)
 
 ### Fix
