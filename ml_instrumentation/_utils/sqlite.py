@@ -28,10 +28,10 @@ def get_cols(cur: Cursor, name: str):
     return set(r[1] for r in rows)
 
 
-def add_cols(cur: Cursor, columns: Iterable[str]):
+def add_cols(cur: Cursor, table: str, columns: Iterable[str]):
     columns = map(quote, columns)
     for col in columns:
-        cur.execute(f'ALTER TABLE results ADD COLUMN {col}')
+        cur.execute(f'ALTER TABLE {table} ADD COLUMN {col}')
 
 
 def ensure_table_compatible(cur: Cursor, name: str, columns: Iterable[str]):
@@ -40,7 +40,7 @@ def ensure_table_compatible(cur: Cursor, name: str, columns: Iterable[str]):
     needed_cols = columns - current_cols
 
     if needed_cols:
-        add_cols(cur, needed_cols)
+        add_cols(cur, name, needed_cols)
 
 
 def maybe_quote(v: Any):
