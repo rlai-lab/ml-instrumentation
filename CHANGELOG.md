@@ -1,3 +1,9 @@
+## 0.4.5 (2025-04-10)
+
+### Fix
+
+- widen dependency versions
+
 ## 0.4.4 (2025-04-10)
 
 ### Fix
