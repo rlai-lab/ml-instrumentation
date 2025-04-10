@@ -29,9 +29,9 @@ authors = [
 dependencies = [
     "numpy>=1.26,<=2.2.4",
     "filelock~=3.13",
-    "polars>=1.23.0",
-    "connectorx>=0.4.4",
-    "pyarrow>=19.0.1",
+    "polars~=1.23",
+    "connectorx~=0.4",
+    "pyarrow~=19.0",
     "sqlalchemy>=2.0.40",
     "sqlalchemy-utils>=0.41.2",
 ]
