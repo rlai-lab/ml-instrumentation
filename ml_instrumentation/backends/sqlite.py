@@ -33,7 +33,11 @@ class Sqlite(BaseBackend):
         if name in self._built:
             return
 
-        cur.execute(f'CREATE TABLE "{name}"(frame INTEGER ASC, id, measurement)')
+        try:
+            cur.execute(f'CREATE TABLE "{name}"(frame INTEGER ASC, id, measurement)')
+        except sqlite3.OperationalError:
+            ...
+
         self._built.add(name)
 
     def is_in_memory(self):
@@ -73,9 +77,9 @@ class Sqlite(BaseBackend):
                 SqlPoint(p.frame, p.exp_id, p.data) for p in sub.values()
             ]
 
-        for m in sql_d:
+        for m, sub in sql_d.items():
             self._setup_table(cur, m)
-            self._write_many(cur, m, sql_d[m])
+            self._write_many(cur, m, sub)
 
         self._con.commit()
 
