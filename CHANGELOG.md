@@ -1,3 +1,9 @@
+## 0.4.4 (2025-04-10)
+
+### Fix
+
+- add fault tolerance to table caching failure
+
 ## 0.4.3 (2025-04-09)
 
 ### Fix
