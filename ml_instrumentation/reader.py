@@ -1,9 +1,9 @@
-from collections.abc import Iterable
+import sqlite3
 from functools import reduce
 from pathlib import Path
+from collections.abc import Iterable
 from typing import Any
 import connectorx as cx
-import sqlite3
 
 import ml_instrumentation._utils.sqlite as sqlu
 
@@ -17,7 +17,7 @@ def read_to_df(db_path: str | Path, metric: str, ids: Iterable[int] | None = Non
         constraints = f'WHERE id IN ({",".join(str_ids)})'
 
     query = f'SELECT * FROM {metric} {constraints}'
-    df = cx.read_sql(f'sqlite://{db_path}', query, partition_on='id', partition_num=4, return_type='polars')
+    df = cx.read_sql(f'sqlite://{db_path}', query, partition_on='id', partition_num=1000, return_type='polars')
     df = df.lazy()
     df = df.rename({'measurement': metric})
     return df
@@ -43,7 +43,7 @@ def load_all_results(db_path: str | Path, metrics: Iterable[str] | None = None, 
     if '_metadata_' not in tables:
         return df.collect()
 
-    meta = cx.read_sql(f'sqlite://{db_path}', 'SELECT * FROM _metadata_', return_type='polars')
+    meta = cx.read_sql(f'sqlite://{db_path}', 'SELECT * FROM _metadata_', return_type='polars', partition_on='id', partition_num=1000)
     meta = meta.lazy()
     return df.join(meta, how='left', on=['id']).collect()
 
