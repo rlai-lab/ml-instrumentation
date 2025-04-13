@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1744322103160,
+  "lastUpdate": 1744513688727,
   "repoUrl": "https://github.com/rlai-lab/ml-instrumentation",
   "entries": {
     "Python Benchmark with pytest-benchmark": [
@@ -1716,6 +1716,58 @@ window.BENCHMARK_DATA = {
             "unit": "iter/sec",
             "range": "stddev: 0.0017977169498798876",
             "extra": "mean: 2.270106786956638 msec\nrounds: 460"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "andnpatterson@gmail.com",
+            "name": "Andy Patterson",
+            "username": "andnp"
+          },
+          "committer": {
+            "email": "andnpatterson@gmail.com",
+            "name": "Andy Patterson",
+            "username": "andnp"
+          },
+          "distinct": true,
+          "id": "fdcb0c7bdeddb6ed62fea8dd71c70cf4f18d3260",
+          "message": "style: dial up type annotations",
+          "timestamp": "2025-04-12T21:07:42-06:00",
+          "tree_id": "9b1eacbab568dd47be61b57f1e441354d7af69af",
+          "url": "https://github.com/rlai-lab/ml-instrumentation/commit/fdcb0c7bdeddb6ed62fea8dd71c70cf4f18d3260"
+        },
+        "date": 1744513688451,
+        "tool": "pytest",
+        "benches": [
+          {
+            "name": "tests/performance/test_Collector.py::test_benchmark_write_path1[basic_collector]",
+            "value": 176.48225118294408,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0018981817289776845",
+            "extra": "mean: 5.666292181208553 msec\nrounds: 149"
+          },
+          {
+            "name": "tests/performance/test_Collector.py::test_benchmark_write_path1[disk_collector]",
+            "value": 105.72949126399426,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0034514256655487096",
+            "extra": "mean: 9.458099041667722 msec\nrounds: 48"
+          },
+          {
+            "name": "tests/performance/test_Collector.py::test_benchmark_read1[basic_collector]",
+            "value": 451.032038425439,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0017906345472152613",
+            "extra": "mean: 2.2171373978022006 msec\nrounds: 455"
+          },
+          {
+            "name": "tests/performance/test_Collector.py::test_benchmark_read1[disk_collector]",
+            "value": 447.4178902912247,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0017772350009864664",
+            "extra": "mean: 2.2350469699571 msec\nrounds: 466"
           }
         ]
       }
