@@ -1,5 +1,6 @@
 from collections.abc import Callable, Sequence
 import pytest
+from pathlib import Path
 from collections import defaultdict
 from typing import Any, NamedTuple
 from ml_instrumentation.Collector import Collector
@@ -21,7 +22,7 @@ def basic_collector():
 
 
 @pytest.fixture
-def disk_collector(tmp_path):
+def disk_collector(tmp_path: Path):
     c = Collector(
         tmp_file=str(tmp_path / 'test.db'),
         config = {

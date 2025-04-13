@@ -1,4 +1,6 @@
-def test_collector_setup1(basic_collector):
+from ml_instrumentation.Collector import Collector
+
+def test_collector_setup1(basic_collector: Collector):
     assert basic_collector.keys() == set()
     assert basic_collector.experiment_ids() == set()
 

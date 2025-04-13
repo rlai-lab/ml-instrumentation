@@ -1,10 +1,11 @@
 import pytest
+from typing import Any
 from tests.fixtures.collector import basic_collector, disk_collector
 
 from ml_instrumentation.Collector import Collector
 
 @pytest.mark.parametrize('collector_fixture', [basic_collector, disk_collector])
-def test_benchmark_write_path1(collector_fixture, request, benchmark):
+def test_benchmark_write_path1(collector_fixture: Any, request: pytest.FixtureRequest, benchmark: Any):
     collector: Collector = request.getfixturevalue(collector_fixture.__name__)
     collector.set_experiment_id(0)
 
@@ -22,7 +23,7 @@ def test_benchmark_write_path1(collector_fixture, request, benchmark):
     benchmark(_inner)
 
 @pytest.mark.parametrize('collector_fixture', [basic_collector, disk_collector])
-def test_benchmark_read1(collector_fixture, request, benchmark):
+def test_benchmark_read1(collector_fixture: Any, request: pytest.FixtureRequest, benchmark: Any):
     collector: Collector = request.getfixturevalue(collector_fixture.__name__)
     collector.set_experiment_id(0)
     for i in range(1_000):

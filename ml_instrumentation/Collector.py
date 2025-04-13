@@ -175,7 +175,7 @@ class Collector:
             },
         }
 
-    def __setstate__(self, state):
+    def __setstate__(self, state: dict[str, Any]):
         for k, v in state['sub'].items():
             self.__dict__[k] = v
 

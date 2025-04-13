@@ -2,7 +2,7 @@ import pickle
 from ml_instrumentation.Collector import Collector
 from ml_instrumentation.Writer import SqlPoint
 
-def test_collector_rw1(basic_collector):
+def test_collector_rw1(basic_collector: Collector):
     basic_collector.set_experiment_id(0)
     basic_collector.next_frame()
 
@@ -23,7 +23,7 @@ def test_collector_rw1(basic_collector):
         SqlPoint(frame=1, id=0, measurement=1),
     ]
 
-def test_collector_rw_trailing_edge1(basic_collector):
+def test_collector_rw_trailing_edge1(basic_collector: Collector):
     basic_collector.set_experiment_id(0)
 
     # note: no next_frame call here, it will go after
@@ -43,7 +43,7 @@ def test_collector_rw_trailing_edge1(basic_collector):
     ]
 
 
-def test_collector_serde(basic_collector):
+def test_collector_serde(basic_collector: Collector):
     basic_collector.set_experiment_id(0)
     basic_collector.next_frame()
 
