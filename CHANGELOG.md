@@ -1,3 +1,13 @@
+## 0.5.0 (2025-04-13)
+
+### Feat
+
+- allow optionally passing an existing file lock
+
+### Fix
+
+- use aggressive partitioning to be robust to null
+
 ## 0.4.5 (2025-04-10)
 
 ### Fix
