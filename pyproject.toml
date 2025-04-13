@@ -14,7 +14,22 @@ include = ['ml_instrumentation', 'tests']
 venvPath = '.'
 venv = '.venv'
 typeCheckingMode = 'standard'
+
+# common overrides
 useLibraryCodeForTypes = true
+strictListInference = true
+strictDictionaryInference = true
+strictSetInference = true
+enableReachabilityAnalysis = true
+
+# stricter overrides
+reportInconsistentConstructor = true
+reportMissingParameterType = true
+reportUnnecessaryCast = true
+reportUnnecessaryIsInstance = true
+reportUnusedClass = true
+reportUnusedExpression = true
+reportUnusedFunction = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["ml_instrumentation"]

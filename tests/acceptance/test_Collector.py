@@ -1,5 +1,7 @@
 import pickle
 import pytest
+from pathlib import Path
+from typing import Any
 
 from ml_instrumentation.Collector import Collector
 from tests.fixtures.collector import basic_collector, disk_collector, simulate_run, SimMetric
@@ -16,7 +18,7 @@ User should be able to:
 The above should be able to run with in-memory collection and disk-backed collection.
 """
 @pytest.mark.parametrize('collector_fixture', [basic_collector, disk_collector])
-def test_collector1(collector_fixture, tmp_path, request):
+def test_collector1(collector_fixture: Any, tmp_path: Path, request: pytest.FixtureRequest):
     collector: Collector = request.getfixturevalue(collector_fixture.__name__)
     collector.set_experiment_id(0)
 

@@ -1,9 +1,9 @@
-from pathlib import Path
-from typing import Any
-import filelock
 import logging
 import os
 import sqlite3
+from pathlib import Path
+from typing import Any
+import filelock
 from ml_instrumentation.backends.base import BaseBackend, Point, SqlPoint
 import ml_instrumentation._utils.sqlite as sqlu
 
@@ -138,5 +138,5 @@ class Sqlite(BaseBackend):
         self._built = set[str]()
 
 
-def row_factory(cur, d):
+def row_factory(cur: sqlite3.Cursor, d: tuple[Any, ...]):
     return SqlPoint(*d)

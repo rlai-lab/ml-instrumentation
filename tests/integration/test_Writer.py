@@ -1,11 +1,12 @@
-from functools import partial
 import sqlite3
+from functools import partial
+from pathlib import Path
 from ml_instrumentation.Writer import Point, SqlPoint, Writer
 from multiprocessing.pool import Pool
 
 from ml_instrumentation.backends.sqlite import Sqlite
 
-def test_write1(writer):
+def test_write1(writer: Writer):
     d = Point(
         metric='measurement-1',
         exp_id=0,
@@ -34,7 +35,7 @@ def test_write1(writer):
         SqlPoint(1, 0, 2.2),
     ]
 
-def test_write2(writer):
+def test_write2(writer: Writer):
     for i in range(1_000):
         d = Point(
             metric='measurement-1',
@@ -58,7 +59,7 @@ def test_write2(writer):
     assert len(points) == 334
 
 
-def test_merge1(tmp_path):
+def test_merge1(tmp_path: Path):
     w1 = Writer(
         backend=Sqlite(tmp_path / 'w1.db'),
     )
@@ -95,7 +96,7 @@ def test_merge1(tmp_path):
     w2.close()
 
 
-def test_merge_parallel1(tmp_path):
+def test_merge_parallel1(tmp_path: Path):
     pool = Pool(10)
     pool.map(partial(_test_merge_parallel1, tmp_path=tmp_path), range(20))
 
@@ -118,7 +119,7 @@ def test_merge_parallel1(tmp_path):
     assert len(res) == 20 * 100
 
 
-def _test_merge_parallel1(i: int, tmp_path):
+def _test_merge_parallel1(i: int, tmp_path: Path):
     writer = Writer(
         backend=Sqlite(tmp_path / f'w{i}.db'),
     )

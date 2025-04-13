@@ -1,5 +1,5 @@
-from collections.abc import Callable
 import numpy as np
+from collections.abc import Callable
 
 class Sampler:
     def next(self, v: float) -> float | None: ...
@@ -8,8 +8,8 @@ class Sampler:
 
 class Ignore:
     def __init__(self): ...
-    def next(self, v): return None
-    def next_eval(self, v): return None
+    def next(self, v: float): return None
+    def next_eval(self, v: Callable[[], float]): return None
     def end(self): return None
 
 # by definition, this must be a stateless object
